@@ -10,21 +10,6 @@ import java.util.Date;
 @Table(name = "book_transaction_history")
 @Data
 @RequiredArgsConstructor
-public class BookTransactionHistory {
+public class BookTransactionHistory extends BookTransaction{
 
-    @Id
-    @GeneratedValue
-    private long transactionId;
-
-    @OneToOne
-    private User user;
-
-    @OneToOne
-    private Book book;
-
-    private Date borrowDate;
-
-    private Date returnDate;
-
-    private boolean isReturn;
 }

@@ -8,9 +8,10 @@ import java.util.Date;
 
 @Entity
 @Table(name = "book_transaction")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
 @RequiredArgsConstructor
-public class BookTransaction {
+public class BookTransaction{
 
     @Id
     @GeneratedValue

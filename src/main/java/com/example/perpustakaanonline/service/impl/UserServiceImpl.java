@@ -23,4 +23,9 @@ public class UserServiceImpl implements UserService {
     public Optional<User> checkIfExist(String email) {
         return userRepository.findById(email);
     }
+
+    @Override
+    public Optional<User> validateEmailAndPassword(String email, String password) {
+        return userRepository.findUserByEmailAndPassword(email,password);
+    }
 }

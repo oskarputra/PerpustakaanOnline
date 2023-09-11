@@ -1,5 +1,6 @@
 package com.example.perpustakaanonline.controller;
 
+import com.example.perpustakaanonline.adapter.request.LoginRequest;
 import com.example.perpustakaanonline.adapter.request.UserRegistrationRequest;
 import com.example.perpustakaanonline.adapter.response.BaseResponse;
 import com.example.perpustakaanonline.entity.User;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/user")
@@ -21,6 +25,30 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @PostMapping("/login")
+    public ResponseEntity<BaseResponse> login(@RequestBody LoginRequest request){
+        try{
+
+            if(!Util.validateEmail(request.getEmail())){
+                return BaseResponse.generateError(HttpStatus.BAD_REQUEST, "Please provide a valid email address");
+            }
+
+            Optional<User> user = userService.checkIfExist(request.getEmail());
+
+            boolean isValid = Bcrypt.validatePassword(request.getPassword(),user.get().getPassword());
+
+            //validate password
+            if(!isValid) {
+                return BaseResponse.generateError(HttpStatus.BAD_REQUEST, "Invalid email or password");
+            }
+            return BaseResponse.generateSuccess(HttpStatus.OK, new ArrayList<>());
+
+        }catch(Exception e){
+            return BaseResponse.generateError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+
+    }
 
     @PostMapping("/register")
     public ResponseEntity<BaseResponse> registerUser(@RequestBody UserRegistrationRequest request){
